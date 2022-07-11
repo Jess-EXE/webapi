@@ -1,0 +1,21 @@
+CREATE TABLE [dbo].[Client](
+	[ClientId] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [varchar](30) NOT NULL,
+	[LastName] [varchar](30) NOT NULL,
+	[DateOfBirth] [date] NOT NULL
+ CONSTRAINT [Client_pk] PRIMARY KEY CLUSTERED)
+
+
+ INSERT INTO Client (FirstName, LastName, DateOfBirth)
+ VALUES ('John', 'Doe', '2018-09-10'),
+        ('Billy', 'Bowman', '2015-04-15'),
+        ('Matt', 'Anderson', '2016-02-18'),
+        ('Sarah', 'Miller', '2020-10-22'),
+        ('Jane', 'Sanders', '2017-12-02'),
+        ('Susan', 'White', '2018-09-08')
+
+ SELECT FirstName, LastName, DateOfBirth FROM client
+
+ DROP TABLE client
+
+ insert into Client (FirstName, LastName, DateOfBirth) values (@FirstName, @LastName, @DateOfBirth);

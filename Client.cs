@@ -19,7 +19,7 @@ namespace webapi
         {
             List<Client> clients = new List<Client>();
 
-            string sql = "SELECT FirstName, LastName, DateOfBirth FROM client;";
+            string sql = "SELECT ClientId, FirstName, LastName, DateOfBirth FROM client;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -31,6 +31,7 @@ namespace webapi
                     {
                         Client client = new Client();
 
+                        client.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
                         client.FirstName = sqlDataReader["FirstName"].ToString();
                         client.LastName = sqlDataReader["LastName"].ToString();
                         client.DateOfBirth = Convert.ToDateTime(sqlDataReader["DateOfBirth"]).ToShortDateString();
@@ -53,9 +54,49 @@ namespace webapi
                 sqlCommand.Parameters.Add("@LastName", System.Data.SqlDbType.VarChar);
                 sqlCommand.Parameters.Add("@DateOfBirth", System.Data.SqlDbType.Date);
 
-                sqlCommand.Parameters["@FirstName"].Value = lastName;
-                sqlCommand.Parameters["@LastName"].Value = firstName;
+                sqlCommand.Parameters["@FirstName"].Value = firstName;
+                sqlCommand.Parameters["@LastName"].Value = lastName;
                 sqlCommand.Parameters["@DateOfBirth"].Value = dateOfBirth;
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+                return rowsAffected;
+            }
+        }
+
+        public static int UpdateClient(int clientId, string firstName, string lastName, string dateOfBirth, SqlConnection sqlConnection)
+        {
+            string sql = "update Client set FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth where ClientId = @ClientId;";
+
+            using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+            {
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+
+                sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@FirstName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@LastName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@DateOfBirth", System.Data.SqlDbType.Date);
+
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
+                sqlCommand.Parameters["@FirstName"].Value = firstName;
+                sqlCommand.Parameters["@LastName"].Value = lastName;
+                sqlCommand.Parameters["@DateOfBirth"].Value = dateOfBirth;
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+                return rowsAffected;
+            }
+        }
+
+        public static int DeleteClient(int clientId, SqlConnection sqlConnection)
+        {
+            string sql = "delete from Client where ClientId = @ClientId;";
+
+            using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+            {
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+
+                sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.Int);
+
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
 
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 return rowsAffected;

@@ -84,5 +84,71 @@ namespace webapi.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [Route("/UpdateClient")]
+        public Response UpdateClient(int clientId, string firstName, string lastName, string dateOfBirth)
+        {
+            Response response = new Response();
+            List<Client> clients = new List<Client>();
+            int rowsAffected = 0;
+            string result = Result.failure.ToString();
+            string message = "";
+
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    rowsAffected = Client.UpdateClient(clientId, firstName, lastName, dateOfBirth, sqlConnection);
+                    result = Result.success.ToString();
+                    clients = Client.SelectClients(sqlConnection);
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
+
+            response.result = result;
+            response.rowsAffected = rowsAffected;
+            response.message = message;
+            response.clients = clients;
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("/DeleteClient")]
+        public Response DeleteClient(int clientId)
+        {
+            Response response = new Response();
+            List<Client> clients = new List<Client>();
+            int rowsAffected = 0;
+            string result = Result.failure.ToString();
+            string message = "";
+
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    rowsAffected = Client.DeleteClient(clientId, sqlConnection);
+                    result = Result.success.ToString();
+                    clients = Client.SelectClients(sqlConnection);
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
+
+            response.result = result;
+            response.rowsAffected = rowsAffected;
+            response.message = message;
+            response.clients = clients;
+
+            return response;
+        }
     }
 }

@@ -10,12 +10,12 @@ namespace webapi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ClientController : ControllerBase
+    public class TherapistController : ControllerBase
     {
 
-        private readonly ILogger<ClientController> _logger;
+        private readonly ILogger<TherapistController> _logger;
 
-        public ClientController(ILogger<ClientController> logger)
+        public TherapistController(ILogger<TherapistController> logger)
         {
             _logger = logger;
         }
@@ -25,18 +25,18 @@ namespace webapi.Controllers
         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
 
         [HttpGet]
-        [Route("/SelectClients")]
-        public Response SelectClients()
+        [Route("/SelectTherapist")]
+        public Response SelectTherapist(int therapistId)
         {
             Response response = new Response();
-            List<Client> clients = new List<Client>();
+            Therapist therapist = new Therapist();
 
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    clients = Client.SelectClients(sqlConnection);
+                    therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
                     response.result = Result.success.ToString();
                     response.rowsAffected = 0;
                 }
@@ -47,17 +47,17 @@ namespace webapi.Controllers
                 response.message = ex.Message;
             }
 
-            response.clients = clients;
+            response.therapist = therapist;
 
             return response;
         }
 
         [HttpGet]
-        [Route("/InsertClient")]
-        public Response InsertClient(string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth)
+        [Route("/InsertTherapist")]
+        public Response InsertTherapist(int titleId, int officeId, string firstName, string lastName, string emailAddress, string therapistPassword)
         {
             Response response = new Response();
-            List<Client> clients = new List<Client>();
+            Therapist therapist = new Therapist();
             int rowsAffected = 0;
             string result = Result.failure.ToString();
             string message = "";
@@ -67,9 +67,9 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Client.InsertClient(primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientId, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
+                    rowsAffected = Therapist.InsertTherapist(titleId, officeId, firstName, lastName, emailAddress, sqlConnection);
                     result = Result.success.ToString();
-                    clients = Client.SelectClients(sqlConnection);
+                    // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -80,17 +80,17 @@ namespace webapi.Controllers
             response.result = result;
             response.rowsAffected = rowsAffected;
             response.message = message;
-            response.clients = clients;
+            response.therapist = therapist;
 
             return response;
         }
 
         [HttpGet]
-        [Route("/UpdateClient")]
-        public Response UpdateClient(int primaryContactId, string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, string zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth)
+        [Route("/UpdateTherapist")]
+        public Response UpdateTherapist(int therapistId, int titleId, int officeId, string firstName, string lastName, string emailAddress)
         {
             Response response = new Response();
-            List<Client> clients = new List<Client>();
+            Therapist therapist = new Therapist();
             int rowsAffected = 0;
             string result = Result.failure.ToString();
             string message = "";
@@ -100,9 +100,9 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Client.UpdateClient(primaryContactId, primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientId, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
+                    rowsAffected = Therapist.UpdateTherapist(therapistId, titleId, officeId, firstName, lastName, emailAddress, sqlConnection);
                     result = Result.success.ToString();
-                    clients = Client.SelectClients(sqlConnection);
+                    // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -113,17 +113,17 @@ namespace webapi.Controllers
             response.result = result;
             response.rowsAffected = rowsAffected;
             response.message = message;
-            response.clients = clients;
+            response.therapist = therapist;
 
             return response;
         }
 
         [HttpGet]
-        [Route("/DeleteClient")]
-        public Response DeleteClient(int clientId)
+        [Route("/DeleteTherapist")]
+        public Response DeleteTherapist(int therapistId)
         {
             Response response = new Response();
-            List<Client> clients = new List<Client>();
+            Therapist therapist = new Therapist();
             int rowsAffected = 0;
             string result = Result.failure.ToString();
             string message = "";
@@ -133,9 +133,9 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Client.DeleteClient(clientId, sqlConnection);
+                    rowsAffected = Therapist.DeleteTherapist(therapistId, sqlConnection);
                     result = Result.success.ToString();
-                    clients = Client.SelectClients(sqlConnection);
+                    // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -146,7 +146,7 @@ namespace webapi.Controllers
             response.result = result;
             response.rowsAffected = rowsAffected;
             response.message = message;
-            response.clients = clients;
+            response.therapist = therapist;
 
             return response;
         }

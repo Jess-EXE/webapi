@@ -24,6 +24,8 @@ namespace webapi
         public string ClientLastName { get; set; }
         public string ClientDateOfBirth { get; set; }
 
+        public int CurrentPrimaryContactId { get; set; }
+
         public static List<Client> SelectClients(SqlConnection sqlConnection)
         {
             List<Client> clients = new List<Client>();
@@ -179,6 +181,29 @@ namespace webapi
                 }
             }
             return client;
+        }
+
+        public static int GetCurretPrimaryContactIdNumber(SqlConnection sqlConnection)
+        {
+
+            Client client = new Client();
+
+            string sql = "SELECT MAX(PrimaryContactId) FROM PrimaryContact";
+
+            using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+            {
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+
+                using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                {
+                    while (sqlDataReader.Read())
+                    {
+                        client.CurrentPrimaryContactId = Convert.ToInt32(sqlDataReader["PrimaryContactId"]);
+                        client.CurrentPrimaryContactId++;
+                    }
+                }
+            }
+            return client.CurrentPrimaryContactId;
         }
 
     }

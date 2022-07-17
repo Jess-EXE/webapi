@@ -64,6 +64,8 @@ namespace webapi.Controllers
 
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
+                //int primaryContactId = Client.GetCurretPrimaryContactIdNumber(sqlConnection);
+
                 try
                 {
                     sqlConnection.Open();
@@ -161,6 +163,21 @@ namespace webapi.Controllers
             {
                 sqlConnection.Open();
                 client = Client.LoadClientProfile(clientId, sqlConnection);
+            }
+
+            return client;
+        }
+
+        [HttpGet]
+        [Route("/CurrentPrimaryContactIdNumber")]
+        public Client GetCurrentPrimaryContactIdNumber()
+        {
+            Client client = new Client();
+
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                client.CurrentPrimaryContactId = Client.GetCurretPrimaryContactIdNumber(sqlConnection);
             }
 
             return client;

@@ -8,21 +8,22 @@ namespace webapi
     {
         // Used in controller to pass result of log in attempt
         public string result { get; set; }
+        public int id { get; set; }
 
         // Accounts are added manually in the API
         public static Dictionary<string, string> accountUsernameAndPassword = new Dictionary<string, string>()
         {
-            {"JesseChase@mail.com" , "Arca1234"},
-            {"MattGwartney@mail.com" , "Arca4321"},
+            {"JOtie@testemail.com" , "Arca1234"},
+            {"JTerapie@testemail.com" , "Arca4321"},
             {"SusanAnderson@mail.com" , "Parent1234"},
             {"MikeAnthony@mail.com" , "Parent4321"}
         };
 
         // The lists below authorize accounts to have roles if they pass log in
-        public static List<string> therapistAccounts = new List<string>()
+        public static Dictionary<string, int> therapistAccountsAndIds = new Dictionary<string, int>()
         {
-            "JesseChase@mail.com",
-            "MattGwartney@mail.com"
+            {"JOtie@testemail.com", 1000},
+            {"JTerapie@testemail.com", 1001}
         };
 
         public static List<string> parentAccounts = new List<string>()
@@ -54,7 +55,7 @@ namespace webapi
         // Authorize role of account if they enter a correct username and password
         public static string Authorize(string username)
         {
-            if (therapistAccounts.Contains(username))
+            if (therapistAccountsAndIds.ContainsKey(username))
             {
                 return "Therapist";
             }
@@ -62,6 +63,11 @@ namespace webapi
             {
                 return "Parent";
             }
+        }
+
+        public static int GetTherapistId(string username)
+        {
+            return therapistAccountsAndIds[username];
         }
 
     }

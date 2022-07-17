@@ -8,7 +8,7 @@ namespace webapi
     {
 
         public int ClientId { get; set; }
-        //public int TherapistId { get; set; }
+        public int TherapistId { get; set; }
         public int PrimaryContactId { get; set; }
         public string PrimaryContactFirstName { get; set; }
         public string PrimaryContactLastName { get; set; }
@@ -28,7 +28,7 @@ namespace webapi
         {
             List<Client> clients = new List<Client>();
 
-            string sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId;";
+            string sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -56,14 +56,15 @@ namespace webapi
             return clients;
         }
 
-        public static int InsertClient(string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth, SqlConnection sqlConnection)
+        public static int InsertClient(int primaryContactId, int therapistId, string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, string clientFirstName, string clientLastName, string clientDateOfBirth, SqlConnection sqlConnection)
         {
-            string sql = "INSERT INTO PrimaryContact (PrimaryContactFirstName, PrimaryContactLastName, [Address], City, StateId, ZipCode, Phone, EmailAddress)VALUES (@PrimaryContactFirstName, @PrimaryContactLastName, @Address, @City, @StateId, @ZipCode, @Phone, @EmailAddress); INSERT INTO Client (ClientFirstName, ClientLastName, ClientDateOfBirth) VALUES (@ClientFirstName, @ClientLastName, @ClientDateOfBirth);";
+            string sql = "INSERT INTO PrimaryContact (PrimaryContactId, PrimaryContactFirstName, PrimaryContactLastName, [Address], City, StateId, ZipCode, Phone, EmailAddress)VALUES (@PrimaryContactId, @PrimaryContactFirstName, @PrimaryContactLastName, @Address, @City, @StateId, @ZipCode, @Phone, @EmailAddress); INSERT INTO Client (PrimaryContactId, TherapistId, ClientFirstName, ClientLastName, ClientDateOfBirth) VALUES (@PrimaryContactId, @TherapistId, @ClientFirstName, @ClientLastName, @ClientDateOfBirth);";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
                 sqlCommand.CommandType = System.Data.CommandType.Text;
-
+                sqlCommand.Parameters.Add("@PrimaryContactId", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@TherapistId", System.Data.SqlDbType.Int);
                 sqlCommand.Parameters.Add("@PrimaryContactFirstName", System.Data.SqlDbType.VarChar);
                 sqlCommand.Parameters.Add("@PrimaryContactLastName", System.Data.SqlDbType.VarChar);
                 sqlCommand.Parameters.Add("@Address", System.Data.SqlDbType.VarChar);
@@ -76,6 +77,8 @@ namespace webapi
                 sqlCommand.Parameters.Add("@ClientLastName", System.Data.SqlDbType.VarChar);
                 sqlCommand.Parameters.Add("@ClientDateOfBirth", System.Data.SqlDbType.DateTime);
 
+                sqlCommand.Parameters["@PrimaryContactId"].Value = primaryContactId;
+                sqlCommand.Parameters["@TherapistId"].Value = therapistId;
                 sqlCommand.Parameters["@PrimaryContactFirstName"].Value = primaryContactFirstName;
                 sqlCommand.Parameters["@PrimaryContactLastName"].Value = primaryContactLastName;
                 sqlCommand.Parameters["@Address"].Value = address;
@@ -169,9 +172,9 @@ namespace webapi
                     while (sqlDataReader.Read())
                     {
                         client.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
-                        client.FirstName = sqlDataReader["FirstName"].ToString();
-                        client.LastName = sqlDataReader["LastName"].ToString();
-                        client.DateOfBirth = Convert.ToDateTime(sqlDataReader["DateOfBirth"]).ToShortDateString();
+                        client.ClientFirstName = sqlDataReader["FirstName"].ToString();
+                        client.ClientLastName = sqlDataReader["LastName"].ToString();
+                        client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["DateOfBirth"]).ToShortDateString();
                     }
                 }
             }

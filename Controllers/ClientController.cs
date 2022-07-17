@@ -20,7 +20,7 @@ namespace webapi.Controllers
             _logger = logger;
         }
 
-        static string serverName = @"GWART-PC\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
+        static string serverName = @"DESKTOP-E3CTJCH\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
         static string databaseName = "OTeam"; //Change to the database where you created your Employee table.
         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
 
@@ -54,7 +54,7 @@ namespace webapi.Controllers
 
         [HttpGet]
         [Route("/InsertClient")]
-        public Response InsertClient(string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth)
+        public Response InsertClient(int primaryContactId, int therapistId, string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, string clientFirstName, string clientLastName, string clientDateOfBirth)
         {
             Response response = new Response();
             List<Client> clients = new List<Client>();
@@ -67,7 +67,7 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Client.InsertClient(primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientId, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
+                    rowsAffected = Client.InsertClient(primaryContactId, therapistId, primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
                     result = Result.success.ToString();
                     clients = Client.SelectClients(sqlConnection);
                 }

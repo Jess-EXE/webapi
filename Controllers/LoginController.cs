@@ -20,7 +20,7 @@ namespace webapi.Controllers
             _logger = logger;
         }
 
-        static string serverName = @"GWART-PC\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
+        static string serverName = @"DESKTOP-E3CTJCH\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
         static string databaseName = "OTeam"; //Change to the database where you created your Employee table.
         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
 
@@ -34,6 +34,10 @@ namespace webapi.Controllers
             if (LogIn.Authenticate(username, password))
             {
                 logIn.result = LogIn.Authorize(username);
+                if (logIn.result == "Therapist")
+                {
+                    logIn.id = LogIn.GetTherapistId(username);
+                }
                 return logIn;
             }
             else

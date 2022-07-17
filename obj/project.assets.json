@@ -636,24 +636,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jchas\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Gwart\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\jchas\\Documents\\OTEAM\\webapp\\webapi\\webapi.csproj",
+      "projectUniqueName": "C:\\Users\\Gwart\\Documents\\GitHub\\webapi\\webapi.csproj",
       "projectName": "webapi",
-      "projectPath": "c:\\Users\\jchas\\Documents\\OTEAM\\webapp\\webapi\\webapi.csproj",
-      "packagesPath": "C:\\Users\\jchas\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\jchas\\Documents\\OTEAM\\webapp\\webapi\\obj\\",
+      "projectPath": "C:\\Users\\Gwart\\Documents\\GitHub\\webapi\\webapi.csproj",
+      "packagesPath": "C:\\Users\\Gwart\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Gwart\\Documents\\GitHub\\webapi\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\jchas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Gwart\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -706,7 +701,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

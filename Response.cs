@@ -11,5 +11,6 @@ namespace webapi
         public int rowsAffected { get; set; }
         public string message { get; set; }
         public List<Client> clients { get; set; }
+        public Therapist therapist { get; set; }
     }
 }

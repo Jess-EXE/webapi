@@ -177,7 +177,7 @@ namespace webapi.Controllers
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
             {
                 sqlConnection.Open();
-                client.CurrentPrimaryContactId = Client.GetCurretPrimaryContactIdNumber(sqlConnection);
+                client = Client.GetCurretPrimaryContactIdNumber(sqlConnection);
             }
 
             return client;

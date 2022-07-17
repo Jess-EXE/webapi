@@ -183,12 +183,12 @@ namespace webapi
             return client;
         }
 
-        public static int GetCurretPrimaryContactIdNumber(SqlConnection sqlConnection)
+        public static Client GetCurretPrimaryContactIdNumber(SqlConnection sqlConnection)
         {
 
             Client client = new Client();
 
-            string sql = "SELECT MAX(PrimaryContactId) FROM PrimaryContact";
+            string sql = "SELECT PrimaryContactId FROM PrimaryContact WHERE PrimaryContactId IN (SELECT MAX(PrimaryContactId) FROM PrimaryContact);";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -203,7 +203,7 @@ namespace webapi
                     }
                 }
             }
-            return client.CurrentPrimaryContactId;
+            return client;
         }
 
     }

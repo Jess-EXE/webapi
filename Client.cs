@@ -103,6 +103,33 @@ namespace webapi
             }
         }
 
+        public static Client LoadClientProfile(int clientId, SqlConnection sqlConnection)
+        {
+            Client client = new Client();
+
+            string sql = "SELECT clientid, firstname, lastname, dateofbirth FROM client WHERE clientid = @ClientId;";
+
+            using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+            {
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+                sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.Int);
+
+                sqlCommand.Parameters["@ClientId"].Value = clientId;
+
+                using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+                {
+                    while (sqlDataReader.Read())
+                    {
+                        client.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
+                        client.FirstName = sqlDataReader["FirstName"].ToString();
+                        client.LastName = sqlDataReader["LastName"].ToString();
+                        client.DateOfBirth = Convert.ToDateTime(sqlDataReader["DateOfBirth"]).ToShortDateString();
+                    }
+                }
+            }
+            return client;
+        }
+
     }
 
 }

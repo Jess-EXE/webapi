@@ -150,5 +150,20 @@ namespace webapi.Controllers
 
             return response;
         }
+
+        [HttpGet]
+        [Route("/LoadClientProfile")]
+        public Client LoadClientProfilePage(int clientId)
+        {
+
+            Client client = new Client();
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                client = Client.LoadClientProfile(clientId, sqlConnection);
+            }
+
+            return client;
+        }
     }
 }

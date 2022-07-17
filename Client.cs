@@ -9,17 +9,26 @@ namespace webapi
 
         public int ClientId { get; set; }
         //public int TherapistId { get; set; }
-        //public int PrimaryContactId { get; set; }
+        public int PrimaryContactId { get; set; }
+        public string PrimaryContactFirstName { get; set; }
+        public string PrimaryContactLastName { get; set; }
+        // public string Address { get; set; }
+        // public string City { get; set; }
+        public string StateId { get; set; }
+        // public int Zipcode { get; set; }
+        public string Phone { get; set; }
+        public string EmailAddress { get; set; }
+        // public string PrimaryContactPassword { get; set; }
         //public int TeacherId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
+        public string ClientFirstName { get; set; }
+        public string ClientLastName { get; set; }
+        public string ClientDateOfBirth { get; set; }
 
         public static List<Client> SelectClients(SqlConnection sqlConnection)
         {
             List<Client> clients = new List<Client>();
 
-            string sql = "SELECT ClientId, FirstName, LastName, DateOfBirth FROM client;";
+            string sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -31,10 +40,15 @@ namespace webapi
                     {
                         Client client = new Client();
 
+                        client.PrimaryContactId = Convert.ToInt32(sqlDataReader["PrimaryContactId"]);
+                        client.PrimaryContactFirstName = sqlDataReader["PrimaryContactFirstName"].ToString();
+                        client.PrimaryContactLastName = sqlDataReader["PrimaryContactLastName"].ToString();
+                        client.Phone = sqlDataReader["Phone"].ToString();
+                        client.EmailAddress = sqlDataReader["EmailAddress"].ToString();
                         client.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
-                        client.FirstName = sqlDataReader["FirstName"].ToString();
-                        client.LastName = sqlDataReader["LastName"].ToString();
-                        client.DateOfBirth = Convert.ToDateTime(sqlDataReader["DateOfBirth"]).ToShortDateString();
+                        client.ClientFirstName = sqlDataReader["ClientFirstName"].ToString();
+                        client.ClientLastName = sqlDataReader["ClientLastName"].ToString();
+                        client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["ClientDateOfBirth"]).ToShortDateString();
                         clients.Add(client);
                     }
                 }
@@ -42,44 +56,78 @@ namespace webapi
             return clients;
         }
 
-        public static int InsertClient(string firstName, string lastName, string dateOfBirth, SqlConnection sqlConnection)
+        public static int InsertClient(string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth, SqlConnection sqlConnection)
         {
-            string sql = "insert into Client (FirstName, LastName, DateOfBirth) values (@FirstName, @LastName, @DateOfBirth);";
+            string sql = "INSERT INTO PrimaryContact (PrimaryContactFirstName, PrimaryContactLastName, [Address], City, StateId, ZipCode, Phone, EmailAddress)VALUES (@PrimaryContactFirstName, @PrimaryContactLastName, @Address, @City, @StateId, @ZipCode, @Phone, @EmailAddress); INSERT INTO Client (ClientFirstName, ClientLastName, ClientDateOfBirth) VALUES (@ClientFirstName, @ClientLastName, @ClientDateOfBirth);";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
                 sqlCommand.CommandType = System.Data.CommandType.Text;
 
-                sqlCommand.Parameters.Add("@FirstName", System.Data.SqlDbType.VarChar);
-                sqlCommand.Parameters.Add("@LastName", System.Data.SqlDbType.VarChar);
-                sqlCommand.Parameters.Add("@DateOfBirth", System.Data.SqlDbType.Date);
+                sqlCommand.Parameters.Add("@PrimaryContactFirstName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@PrimaryContactLastName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@Address", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@City", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@StateId", System.Data.SqlDbType.Char);
+                sqlCommand.Parameters.Add("@ZipCode", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@Phone", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@EmailAddress", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@ClientFirstName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@ClientLastName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@ClientDateOfBirth", System.Data.SqlDbType.DateTime);
 
-                sqlCommand.Parameters["@FirstName"].Value = firstName;
-                sqlCommand.Parameters["@LastName"].Value = lastName;
-                sqlCommand.Parameters["@DateOfBirth"].Value = dateOfBirth;
+                sqlCommand.Parameters["@PrimaryContactFirstName"].Value = primaryContactFirstName;
+                sqlCommand.Parameters["@PrimaryContactLastName"].Value = primaryContactLastName;
+                sqlCommand.Parameters["@Address"].Value = address;
+                sqlCommand.Parameters["@City"].Value = city;
+                sqlCommand.Parameters["@StateId"].Value = stateId;
+                sqlCommand.Parameters["@ZipCode"].Value = zipCode;
+                sqlCommand.Parameters["@Phone"].Value = phone;
+                sqlCommand.Parameters["@EmailAddress"].Value = emailAddress;
+                sqlCommand.Parameters["@ClientFirstName"].Value = clientFirstName;
+                sqlCommand.Parameters["@ClientLastName"].Value = clientLastName;
+                sqlCommand.Parameters["@ClientDateOfBirth"].Value = clientDateOfBirth;
 
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 return rowsAffected;
             }
         }
 
-        public static int UpdateClient(int clientId, string firstName, string lastName, string dateOfBirth, SqlConnection sqlConnection)
+        public static int UpdateClient(int primaryContactId, string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, string zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth, SqlConnection sqlConnection)
         {
-            string sql = "update Client set FirstName = @FirstName, LastName = @LastName, DateOfBirth = @DateOfBirth where ClientId = @ClientId;";
+            string sql = "UPDATE PrimaryContact SET PrimaryContactFirstName = @PrimaryContactFirstName, PrimaryContactLastName = @PrimaryContactLastName, [Address] = @Address, City = @City, StateId = @StateId, ZipCode = @ZipCode, Phone = @Phone, EmailAddress = @EmailAddress  WHERE PrimaryContactId = @PrimaryContactId;; UPDATE Client SET ClientFirstName = @ClientFirstName, ClientLastName = @ClientLastName, ClientDateOfBirth = @ClientDateOfBirth WHERE ClientId = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
                 sqlCommand.CommandType = System.Data.CommandType.Text;
 
+                sqlCommand.Parameters.Add("@PrimaryContactId", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@PrimaryContactFirstName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@PrimaryContactLastName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@Address", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@City", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@StateId", System.Data.SqlDbType.Char);
+                sqlCommand.Parameters.Add("@ZipCode", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@Phone", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@EmailAddress", System.Data.SqlDbType.VarChar);
                 sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.Int);
-                sqlCommand.Parameters.Add("@FirstName", System.Data.SqlDbType.VarChar);
-                sqlCommand.Parameters.Add("@LastName", System.Data.SqlDbType.VarChar);
-                sqlCommand.Parameters.Add("@DateOfBirth", System.Data.SqlDbType.Date);
+                sqlCommand.Parameters.Add("@ClientFirstName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@ClientLastName", System.Data.SqlDbType.VarChar);
+                sqlCommand.Parameters.Add("@ClientDateOfBirth", System.Data.SqlDbType.DateTime);
 
+                sqlCommand.Parameters["@PrimaryContactId"].Value = primaryContactId;
+                sqlCommand.Parameters["@PrimaryContactFirstName"].Value = primaryContactFirstName;
+                sqlCommand.Parameters["@PrimaryContactLastName"].Value = primaryContactLastName;
+                sqlCommand.Parameters["@Address"].Value = address;
+                sqlCommand.Parameters["@City"].Value = city;
+                sqlCommand.Parameters["@StateId"].Value = stateId;
+                sqlCommand.Parameters["@ZipCode"].Value = zipCode;
+                sqlCommand.Parameters["@Phone"].Value = phone;
+                sqlCommand.Parameters["@EmailAddress"].Value = emailAddress;
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
-                sqlCommand.Parameters["@FirstName"].Value = firstName;
-                sqlCommand.Parameters["@LastName"].Value = lastName;
-                sqlCommand.Parameters["@DateOfBirth"].Value = dateOfBirth;
+                sqlCommand.Parameters["@ClientFirstName"].Value = clientFirstName;
+                sqlCommand.Parameters["@ClientLastName"].Value = clientLastName;
+                sqlCommand.Parameters["@ClientDateOfBirth"].Value = clientDateOfBirth;
 
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 return rowsAffected;
@@ -88,7 +136,7 @@ namespace webapi
 
         public static int DeleteClient(int clientId, SqlConnection sqlConnection)
         {
-            string sql = "delete from Client where ClientId = @ClientId;";
+            string sql = "DELETE FROM Client WHERE ClientId = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -131,5 +179,4 @@ namespace webapi
         }
 
     }
-
 }

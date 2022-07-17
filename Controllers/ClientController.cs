@@ -20,8 +20,8 @@ namespace webapi.Controllers
             _logger = logger;
         }
 
-        static string serverName = @"DESKTOP-E3CTJCH\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
-        static string databaseName = "testing"; //Change to the database where you created your Employee table.
+        static string serverName = @"GWART-PC\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
+        static string databaseName = "OTeam"; //Change to the database where you created your Employee table.
         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
 
         [HttpGet]
@@ -54,7 +54,7 @@ namespace webapi.Controllers
 
         [HttpGet]
         [Route("/InsertClient")]
-        public Response InsertClient(string firstName, string lastName, string dateOfBirth)
+        public Response InsertClient(string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, int zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth)
         {
             Response response = new Response();
             List<Client> clients = new List<Client>();
@@ -67,7 +67,7 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Client.InsertClient(firstName, lastName, dateOfBirth, sqlConnection);
+                    rowsAffected = Client.InsertClient(primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientId, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
                     result = Result.success.ToString();
                     clients = Client.SelectClients(sqlConnection);
                 }
@@ -87,7 +87,7 @@ namespace webapi.Controllers
 
         [HttpGet]
         [Route("/UpdateClient")]
-        public Response UpdateClient(int clientId, string firstName, string lastName, string dateOfBirth)
+        public Response UpdateClient(int primaryContactId, string primaryContactFirstName, string primaryContactLastName, string address, string city, string stateId, string zipCode, string phone, string emailAddress, int clientId, string clientFirstName, string clientLastName, string clientDateOfBirth)
         {
             Response response = new Response();
             List<Client> clients = new List<Client>();
@@ -100,7 +100,7 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Client.UpdateClient(clientId, firstName, lastName, dateOfBirth, sqlConnection);
+                    rowsAffected = Client.UpdateClient(primaryContactId, primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientId, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
                     result = Result.success.ToString();
                     clients = Client.SelectClients(sqlConnection);
                 }

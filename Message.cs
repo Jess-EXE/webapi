@@ -14,6 +14,7 @@ namespace webapi
         public string FromUser { get; set; }
 
         public DateTime TimeSent { get; set; }
+        public int MessageId { get; set; }
         //public List<string> recievedMessages = new List<string>();
 
         // public static Message SelectMessages(int clientId, int therapistId, SqlConnection sqlConnection)
@@ -58,7 +59,7 @@ namespace webapi
         {
             List<Message> userMessages = new List<Message>();
 
-            string sql = "SELECT MessageText, FromUser, TimeSent FROM [Message] WHERE ClientId = @ClientId;";
+            string sql = "SELECT MessageId, MessageText, FromUser, TimeSent FROM [Message] WHERE ClientId = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -83,6 +84,7 @@ namespace webapi
                         //message.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
                         // message.PrimaryContactId = Convert.ToInt32(sqlDataReader["PrimaryContactId"]);
                         //message.TherapistId = Convert.ToInt32(sqlDataReader["TherapistId"]);
+                        message.MessageId = Convert.ToInt32(sqlDataReader["MessageId"]);
                         message.MessageText = sqlDataReader["MessageText"].ToString();
                         message.FromUser = sqlDataReader["FromUser"].ToString();
                         message.TimeSent = Convert.ToDateTime(sqlDataReader["TimeSent"]);
@@ -146,26 +148,22 @@ namespace webapi
         //     }
         // }
 
-        // public static int DeleteMessage(int clientId, int primaryContactId, int therapistId, SqlConnection sqlConnection)
-        // {
-        //     string sql = "DELETE FROM Client WHERE ClientId = @ClientId AND PrimaryContactId = @PrimaryContactId AND TherapistId = @TherapistId;";
+        public static int DeleteMessage(int messageId, SqlConnection sqlConnection)
+        {
+            string sql = "DELETE FROM [Message] WHERE MessageId = @MessageId";
 
-        //     using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
-        //     {
-        //         sqlCommand.CommandType = System.Data.CommandType.Text;
+            using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+            {
+                sqlCommand.CommandType = System.Data.CommandType.Text;
 
-        //         sqlCommand.Parameters.Add("@ClientId", System.Data.SqlDbType.Int);
-        //         qlCommand.Parameters.Add("@PrimaryContactId", System.Data.SqlDbType.Int);
-        //         qlCommand.Parameters.Add("@TherapistId", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@MessageId", System.Data.SqlDbType.Int);
 
-        //         sqlCommand.Parameters["@ClientId"].Value = clientId;
-        //         sqlCommand.Parameters["@PrimaryContactId"].Value = primaryContactId;
-        //         sqlCommand.Parameters["@TherapistId"].Value = therapistId;
+                sqlCommand.Parameters["@MessageId"].Value = messageId;
 
-        //         int rowsAffected = sqlCommand.ExecuteNonQuery();
-        //         return rowsAffected;
-        //     }
-        // }
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+                return rowsAffected;
+            }
+        }
 
     }
 }

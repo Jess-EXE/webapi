@@ -101,6 +101,39 @@ namespace webapi.Controllers
             return response;
         }
 
+        [HttpGet]
+        [Route("/DeleteMessage")]
+        public Response DeleteMessage(int messageId)
+        {
+            Response response = new Response();
+            List<Message> userMessages = new List<Message>();
+            int rowsAffected = 0;
+            string result = Result.failure.ToString();
+            string message = "";
+
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    rowsAffected = Message.DeleteMessage(messageId, sqlConnection);
+                    result = Result.success.ToString();
+                    usermessages = Message.SelectMessages(sqlConnection);
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
+
+            response.result = result;
+            response.rowsAffected = rowsAffected;
+            response.message = message;
+            response.userDbMessages = userMessages;
+
+            return response;
+        }
+
         // [HttpGet]
         // [Route("/UpdateTherapist")]
         // public Response UpdateTherapist(int therapistId, int titleId, int officeId, string firstName, string lastName, string emailAddress)

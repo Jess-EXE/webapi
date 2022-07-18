@@ -160,7 +160,7 @@ namespace webapi
         {
             Client client = new Client();
 
-            string sql = "SELECT clientid, firstname, lastname, dateofbirth FROM client WHERE clientid = @ClientId;";
+            string sql = "SELECT clientid, clientfirstname, clientlastname, clientdateofbirth FROM client WHERE clientid = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -174,9 +174,9 @@ namespace webapi
                     while (sqlDataReader.Read())
                     {
                         client.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
-                        client.ClientFirstName = sqlDataReader["FirstName"].ToString();
-                        client.ClientLastName = sqlDataReader["LastName"].ToString();
-                        client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["DateOfBirth"]).ToShortDateString();
+                        client.ClientFirstName = sqlDataReader["ClientFirstName"].ToString();
+                        client.ClientLastName = sqlDataReader["ClientLastName"].ToString();
+                        client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["ClientDateOfBirth"]).ToShortDateString();
                     }
                 }
             }

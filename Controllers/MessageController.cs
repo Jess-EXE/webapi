@@ -10,33 +10,48 @@ namespace webapi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TherapistController : ControllerBase
+    public class MessageController : ControllerBase
     {
 
-        private readonly ILogger<TherapistController> _logger;
+        private readonly ILogger<MessageController> _logger;
 
-        public TherapistController(ILogger<TherapistController> logger)
+        public MessageController(ILogger<MessageController> logger)
         {
             _logger = logger;
         }
 
-        static string serverName = @"GWART-PC\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
+        static string serverName = @"DESKTOP-E3CTJCH\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
         static string databaseName = "OTeam"; //Change to the database where you created your Employee table.
         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
 
+        // [HttpGet]
+        // [Route("/SelectMessages")]
+        // public List<string> SelectMessages(int clientId, int therapistId)
+        // {
+        //     Message message = new Message();
+
+        //     using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        //     {
+        //         sqlConnection.Open();
+        //         message = Message.SelectMessages(clientId, therapistId, sqlConnection);
+        //     }
+
+        //     return message.recievedMessages;
+        // }
+
         [HttpGet]
         [Route("/SelectMessages")]
-        public Response SelectMessages(int clientId, int primaryContactId, int therapistId)
+        public Response SelectMessages(int clientId)
         {
             Response response = new Response();
-            List<Message> messages = new List<Message>();
+            List<Message> userMessages = new List<Message>();
 
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    messages = Message.SelectMessages(clientId, primaryContactId, therapistId, sqlConnection);
+                    userMessages = Message.SelectMessages(clientId, sqlConnection);
                     response.result = Result.success.ToString();
                     response.rowsAffected = 0;
                 }
@@ -47,14 +62,14 @@ namespace webapi.Controllers
                 response.message = ex.Message;
             }
 
-            response.messages = messages;
+            response.userDbMessages = userMessages;
 
             return response;
         }
 
         [HttpGet]
         [Route("/InsertMessage")]
-        public Response InsertMessage(int clientId, int primaryContactId, int therapistId, string messageText)
+        public Response InsertMessage(int clientId, int sentFromId, DateTime currentTimestamp, string messageText)
         {
 
             Response response = new Response();
@@ -69,7 +84,7 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Message.InsertMessage(clientId, primaryContactId, therapistId, messageText, sqlConnection);
+                    rowsAffected = Message.InsertMessage(clientId, sentFromId, currentTimestamp, messageText, sqlConnection);
                     result = Result.success.ToString();
                 }
                 catch (Exception ex)
@@ -81,75 +96,75 @@ namespace webapi.Controllers
             response.result = result;
             response.rowsAffected = rowsAffected;
             response.message = message;
-            response.userMessages = userMessages;
+            response.userDbMessages = userMessages;
 
             return response;
         }
 
-        [HttpGet]
-        [Route("/UpdateTherapist")]
-        public Response UpdateTherapist(int therapistId, int titleId, int officeId, string firstName, string lastName, string emailAddress)
-        {
-            Response response = new Response();
-            Therapist therapist = new Therapist();
-            int rowsAffected = 0;
-            string result = Result.failure.ToString();
-            string message = "";
+        // [HttpGet]
+        // [Route("/UpdateTherapist")]
+        // public Response UpdateTherapist(int therapistId, int titleId, int officeId, string firstName, string lastName, string emailAddress)
+        // {
+        //     Response response = new Response();
+        //     Therapist therapist = new Therapist();
+        //     int rowsAffected = 0;
+        //     string result = Result.failure.ToString();
+        //     string message = "";
 
-            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    sqlConnection.Open();
-                    rowsAffected = Therapist.UpdateTherapist(therapistId, titleId, officeId, firstName, lastName, emailAddress, sqlConnection);
-                    result = Result.success.ToString();
-                    // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
-                }
-                catch (Exception ex)
-                {
-                    message = ex.Message;
-                }
-            }
+        //     using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        //     {
+        //         try
+        //         {
+        //             sqlConnection.Open();
+        //             rowsAffected = Therapist.UpdateTherapist(therapistId, titleId, officeId, firstName, lastName, emailAddress, sqlConnection);
+        //             result = Result.success.ToString();
+        //             // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             message = ex.Message;
+        //         }
+        //     }
 
-            response.result = result;
-            response.rowsAffected = rowsAffected;
-            response.message = message;
-            response.therapist = therapist;
+        //     response.result = result;
+        //     response.rowsAffected = rowsAffected;
+        //     response.message = message;
+        //     response.therapist = therapist;
 
-            return response;
-        }
+        //     return response;
+        // }
 
-        [HttpGet]
-        [Route("/DeleteTherapist")]
-        public Response DeleteTherapist(int therapistId)
-        {
-            Response response = new Response();
-            Therapist therapist = new Therapist();
-            int rowsAffected = 0;
-            string result = Result.failure.ToString();
-            string message = "";
+        // [HttpGet]
+        // [Route("/DeleteTherapist")]
+        // public Response DeleteTherapist(int therapistId)
+        // {
+        //     Response response = new Response();
+        //     Therapist therapist = new Therapist();
+        //     int rowsAffected = 0;
+        //     string result = Result.failure.ToString();
+        //     string message = "";
 
-            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    sqlConnection.Open();
-                    rowsAffected = Therapist.DeleteTherapist(therapistId, sqlConnection);
-                    result = Result.success.ToString();
-                    // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
-                }
-                catch (Exception ex)
-                {
-                    message = ex.Message;
-                }
-            }
+        //     using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        //     {
+        //         try
+        //         {
+        //             sqlConnection.Open();
+        //             rowsAffected = Therapist.DeleteTherapist(therapistId, sqlConnection);
+        //             result = Result.success.ToString();
+        //             // therapist = Therapist.SelectTherapist(therapistId, sqlConnection);
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             message = ex.Message;
+        //         }
+        //     }
 
-            response.result = result;
-            response.rowsAffected = rowsAffected;
-            response.message = message;
-            response.therapist = therapist;
+        //     response.result = result;
+        //     response.rowsAffected = rowsAffected;
+        //     response.message = message;
+        //     response.therapist = therapist;
 
-            return response;
-        }
+        //     return response;
+        // }
     }
 }

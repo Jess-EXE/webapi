@@ -12,5 +12,7 @@ namespace webapi
         public string message { get; set; }
         public List<Client> clients { get; set; }
         public Therapist therapist { get; set; }
+
+        public List<Message> userDbMessages { get; set; }
     }
 }

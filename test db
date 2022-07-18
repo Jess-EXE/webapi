@@ -1,36 +1,12 @@
--- CREATE TABLE [dbo].[Client](
--- 	[ClientId] [int] IDENTITY(1,1) NOT NULL,
--- 	[FirstName] [varchar](30) NOT NULL,
--- 	[LastName] [varchar](30) NOT NULL,
--- 	[DateOfBirth] [date] NOT NULL
---  CONSTRAINT [Client_pk] PRIMARY KEY CLUSTERED)
-
-
---  INSERT INTO Client (FirstName, LastName, DateOfBirth)
---  VALUES ('John', 'Doe', '2018-09-10'),
---         ('Billy', 'Bowman', '2015-04-15'),
---         ('Matt', 'Anderson', '2016-02-18'),
---         ('Sarah', 'Miller', '2020-10-22'),
---         ('Jane', 'Sanders', '2017-12-02'),
---         ('Susan', 'White', '2018-09-08')
-
---  SELECT FirstName, LastName, DateOfBirth FROM client
-
---  DROP TABLE client
-
---  insert into Client (FirstName, LastName, DateOfBirth) values (@FirstName, @LastName, @DateOfBirth);
-
 USE [master]
 GO
-/****** Object:  Database [OTeam]    Script Date: 7/17/2022 11:05:46 AM ******/
-/**DROP DATABASE [OTeam]**/
-
+/****** Object:  Database [OTeam]    Script Date: 7/17/2022 10:51:39 PM ******/
 CREATE DATABASE [OTeam]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'OTeam', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\OTeam.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+( NAME = N'OTeam', FILENAME = N'D:\MSSQL\MSSQL15.SQLEXPRESS\MSSQL\DATA\OTeam.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
  LOG ON 
-( NAME = N'OTeam_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\OTeam_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+( NAME = N'OTeam_log', FILENAME = N'D:\MSSQL\MSSQL15.SQLEXPRESS\MSSQL\DATA\OTeam_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
 GO
 ALTER DATABASE [OTeam] SET COMPATIBILITY_LEVEL = 150
@@ -104,7 +80,7 @@ ALTER DATABASE [OTeam] SET QUERY_STORE = OFF
 GO
 USE [OTeam]
 GO
-/****** Object:  Table [dbo].[Client]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[Client]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -122,7 +98,7 @@ CREATE TABLE [dbo].[Client](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Message]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[Message]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,16 +106,16 @@ GO
 CREATE TABLE [dbo].[Message](
 	[MessageId] [int] IDENTITY(1,1) NOT NULL,
 	[ClientId] [int] NOT NULL,
-	[TherapistId] [int] NOT NULL,
-	[PrimaryContactId] [int] NOT NULL,
 	[MessageText] [text] NOT NULL,
+	[FromUser] [varchar](50) NULL,
+	[TimeSent] [datetime] NULL,
  CONSTRAINT [Message_pk] PRIMARY KEY CLUSTERED 
 (
 	[MessageId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Office]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[Office]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -158,13 +134,13 @@ CREATE TABLE [dbo].[Office](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PrimaryContact]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[PrimaryContact]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[PrimaryContact](
-	[PrimaryContactId] [int] IDENTITY(1000,1) NOT NULL,
+	[PrimaryContactId] [int] NOT NULL,
 	[PrimaryContactFirstName] [varchar](30) NULL,
 	[PrimaryContactLastName] [varchar](30) NULL,
 	[Address] [varchar](40) NOT NULL,
@@ -179,7 +155,7 @@ CREATE TABLE [dbo].[PrimaryContact](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[State]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[State]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -193,7 +169,7 @@ CREATE TABLE [dbo].[State](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Teacher]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[Teacher]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -210,7 +186,7 @@ CREATE TABLE [dbo].[Teacher](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Therapist]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[Therapist]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -228,7 +204,7 @@ CREATE TABLE [dbo].[Therapist](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Title]    Script Date: 7/17/2022 11:05:46 AM ******/
+/****** Object:  Table [dbo].[Title]    Script Date: 7/17/2022 10:51:39 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -260,13 +236,23 @@ INSERT [dbo].[Client] ([ClientId], [TherapistId], [PrimaryContactId], [ClientFir
 GO
 INSERT [dbo].[Client] ([ClientId], [TherapistId], [PrimaryContactId], [ClientFirstName], [ClientLastName], [ClientDateOfBirth]) VALUES (1009, 1004, 1001, N'Christopher', N'Brennan', CAST(N'2012-12-25T00:00:00.000' AS DateTime))
 GO
+INSERT [dbo].[Client] ([ClientId], [TherapistId], [PrimaryContactId], [ClientFirstName], [ClientLastName], [ClientDateOfBirth]) VALUES (1012, 1000, 0, N'Jesse', N'Chase', CAST(N'1998-04-11T00:00:00.000' AS DateTime))
+GO
+INSERT [dbo].[Client] ([ClientId], [TherapistId], [PrimaryContactId], [ClientFirstName], [ClientLastName], [ClientDateOfBirth]) VALUES (1013, 1000, 0, N'success', N'pls', CAST(N'1998-04-11T00:00:00.000' AS DateTime))
+GO
+INSERT [dbo].[Client] ([ClientId], [TherapistId], [PrimaryContactId], [ClientFirstName], [ClientLastName], [ClientDateOfBirth]) VALUES (1014, 1000, 1009, N'reallypls', N'work', CAST(N'2022-06-27T00:00:00.000' AS DateTime))
+GO
 SET IDENTITY_INSERT [dbo].[Client] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Message] ON 
 GO
-INSERT [dbo].[Message] ([MessageId], [ClientId], [TherapistId], [PrimaryContactId], [MessageText]) VALUES (1, 1002, 1001, 1003, N'James states he was excited about upcoming field trip to the Rennaissance Faire. He met his dressing goal!')
+INSERT [dbo].[Message] ([MessageId], [ClientId], [MessageText], [FromUser], [TimeSent]) VALUES (1, 1002, N'James states he was excited about upcoming field trip to the Rennaissance Faire. He met his dressing goal!', N'Matt Gwartney', CAST(N'2022-07-17T22:07:34.557' AS DateTime))
 GO
-INSERT [dbo].[Message] ([MessageId], [ClientId], [TherapistId], [PrimaryContactId], [MessageText]) VALUES (2, 1002, 1001, 1003, N'Thank you Dr. Otie!')
+INSERT [dbo].[Message] ([MessageId], [ClientId], [MessageText], [FromUser], [TimeSent]) VALUES (2, 1002, N'Thank you Dr. Otie!', N'Jesse Chase', CAST(N'2022-07-17T22:07:34.557' AS DateTime))
+GO
+INSERT [dbo].[Message] ([MessageId], [ClientId], [MessageText], [FromUser], [TimeSent]) VALUES (4, 1002, N'It finally worked!', N'Matt Gwartney', CAST(N'2022-07-17T22:07:34.557' AS DateTime))
+GO
+INSERT [dbo].[Message] ([MessageId], [ClientId], [MessageText], [FromUser], [TimeSent]) VALUES (9, 1002, N'asdfsdfasdfdsa', N'Jane Terapie', CAST(N'2022-07-17T22:07:34.557' AS DateTime))
 GO
 SET IDENTITY_INSERT [dbo].[Message] OFF
 GO
@@ -276,7 +262,9 @@ INSERT [dbo].[Office] ([OfficeId], [OfficeName], [Address], [City], [StateId], [
 GO
 SET IDENTITY_INSERT [dbo].[Office] OFF
 GO
-SET IDENTITY_INSERT [dbo].[PrimaryContact] ON 
+INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (0, N'Walter', N'White', N'916 Pittman road', N'Hot Springs', N'IA', 71913, N'5555555555', N'JesseChase@mail.com')
+GO
+INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (3, N'Walter', N'White', N'916 Pittman road', N'Hot Springs', N'IA', 71913, N'5555555555', N'JesseChase@mail.com')
 GO
 INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (1001, N'Patrick', N'Brennan', N'100 Sunnyshore Lane', N'Little Rock', N'AR', 72002, N'501-555-0137', N'PBrennan@testemail.com')
 GO
@@ -294,7 +282,7 @@ INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [P
 GO
 INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (1008, N'Brenda', N'Lamb', N'875 Parsonage Drive', N'Conway', N'AR', 72035, N'501-555-0185', N'BLamb@testemail.com')
 GO
-SET IDENTITY_INSERT [dbo].[PrimaryContact] OFF
+INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (1009, N'hello', N'success', N'916 Pittman road', N'Hot Springs', N'IN', 71913, N'5555555555', N'JesseChase@mail.com')
 GO
 INSERT [dbo].[State] ([StateId], [StateName]) VALUES (N'AK', N'Alaska')
 GO
@@ -480,21 +468,6 @@ REFERENCES [dbo].[Therapist] ([TherapistId])
 GO
 ALTER TABLE [dbo].[Client] CHECK CONSTRAINT [Therapist_Id_fk]
 GO
-ALTER TABLE [dbo].[Message]  WITH CHECK ADD  CONSTRAINT [Client_Id_Message_fk] FOREIGN KEY([ClientId])
-REFERENCES [dbo].[Client] ([ClientId])
-GO
-ALTER TABLE [dbo].[Message] CHECK CONSTRAINT [Client_Id_Message_fk]
-GO
-ALTER TABLE [dbo].[Message]  WITH CHECK ADD  CONSTRAINT [Primary_Contact_Id_Message_fk] FOREIGN KEY([PrimaryContactId])
-REFERENCES [dbo].[PrimaryContact] ([PrimaryContactId])
-GO
-ALTER TABLE [dbo].[Message] CHECK CONSTRAINT [Primary_Contact_Id_Message_fk]
-GO
-ALTER TABLE [dbo].[Message]  WITH CHECK ADD  CONSTRAINT [Therapist_Id_Message_fk] FOREIGN KEY([TherapistId])
-REFERENCES [dbo].[Therapist] ([TherapistId])
-GO
-ALTER TABLE [dbo].[Message] CHECK CONSTRAINT [Therapist_Id_Message_fk]
-GO
 ALTER TABLE [dbo].[Office]  WITH CHECK ADD  CONSTRAINT [State_Id_Office_fk] FOREIGN KEY([StateId])
 REFERENCES [dbo].[State] ([StateId])
 GO
@@ -519,4 +492,3 @@ USE [master]
 GO
 ALTER DATABASE [OTeam] SET  READ_WRITE 
 GO
-

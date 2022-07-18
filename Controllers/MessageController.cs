@@ -69,7 +69,7 @@ namespace webapi.Controllers
 
         [HttpGet]
         [Route("/InsertMessage")]
-        public Response InsertMessage(int clientId, int sentFromId, DateTime currentTimestamp, string messageText)
+        public Response InsertMessage(int clientId, int sentFromId, string messageText)
         {
 
             Response response = new Response();
@@ -84,7 +84,8 @@ namespace webapi.Controllers
                 try
                 {
                     sqlConnection.Open();
-                    rowsAffected = Message.InsertMessage(clientId, sentFromId, currentTimestamp, messageText, sqlConnection);
+                    rowsAffected = Message.InsertMessage(clientId, sentFromId, messageText, sqlConnection);
+                    userMessages = Message.SelectMessages(clientId, sqlConnection);
                     result = Result.success.ToString();
                 }
                 catch (Exception ex)

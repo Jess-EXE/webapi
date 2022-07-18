@@ -94,9 +94,9 @@ namespace webapi
             return userMessages;
         }
 
-        public static int InsertMessage(int clientId, int sentFromId, DateTime CurrentTimestamp, string messageText, SqlConnection sqlConnection)
+        public static int InsertMessage(int clientId, int sentFromId, string messageText, SqlConnection sqlConnection)
         {
-            string sql = "INSERT INTO [Message] (ClientId, MessageText, TimeSent, FromUser) VALUES (@ClientId, @MessageText, @CurrentTimestamp, (SELECT (FirstName + ' ' + LastName) AS FullName FROM Therapist WHERE TherapistId = @SentFromId));";
+            string sql = "INSERT INTO [Message] (ClientId, MessageText, TimeSent, FromUser) VALUES (@ClientId, @MessageText, CURRENT_TIMESTAMP, (SELECT (FirstName + ' ' + LastName) AS FullName FROM Therapist WHERE TherapistId = @SentFromId));";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -107,14 +107,14 @@ namespace webapi
                 //sqlCommand.Parameters.Add("@PrimaryContactId", System.Data.SqlDbType.Int);
                 //sqlCommand.Parameters.Add("@TherapistId", System.Data.SqlDbType.Int);
                 sqlCommand.Parameters.Add("@MessageText", System.Data.SqlDbType.Text);
-                sqlCommand.Parameters.Add("@CurrentTimestamp", System.Data.SqlDbType.DateTime);
+                //sqlCommand.Parameters.Add("@CurrentTimestamp", System.Data.SqlDbType.DateTime);
                 sqlCommand.Parameters.Add("@SentFromId", System.Data.SqlDbType.Int);
 
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
                 //sqlCommand.Parameters.Add["@TimeSent"].Value = timeSent;
                 //sqlCommand.Parameters.Add["@PrimaryContactId"].Value = primaryContactId;
                 //sqlCommand.Parameters.Add["@TherapistId"].Value = therapistId;
-                sqlCommand.Parameters["@CurrentTimestamp"].Value = CurrentTimestamp;
+                //sqlCommand.Parameters["@CurrentTimestamp"].Value = CurrentTimestamp;
                 sqlCommand.Parameters["@MessageText"].Value = messageText;
                 sqlCommand.Parameters["@SentFromId"].Value = sentFromId;
 

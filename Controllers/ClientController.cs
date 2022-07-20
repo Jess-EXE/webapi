@@ -26,7 +26,7 @@ namespace webapi.Controllers
 
         [HttpGet]
         [Route("/SelectClients")]
-        public Response SelectClients()
+        public Response SelectClients(int currentLoggedInId)
         {
             Response response = new Response();
             List<Client> clients = new List<Client>();
@@ -36,7 +36,7 @@ namespace webapi.Controllers
                 using (SqlConnection sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    clients = Client.SelectClients(sqlConnection);
+                    clients = Client.SelectClients(currentLoggedInId, sqlConnection);
                     response.result = Result.success.ToString();
                     response.rowsAffected = 0;
                 }
@@ -71,7 +71,7 @@ namespace webapi.Controllers
                     sqlConnection.Open();
                     rowsAffected = Client.InsertClient(primaryContactId, therapistId, primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
                     result = Result.success.ToString();
-                    clients = Client.SelectClients(sqlConnection);
+                    clients = Client.SelectClients(LogIn.loggedInId, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +104,7 @@ namespace webapi.Controllers
                     sqlConnection.Open();
                     rowsAffected = Client.UpdateClient(primaryContactId, primaryContactFirstName, primaryContactLastName, address, city, stateId, zipCode, phone, emailAddress, clientId, clientFirstName, clientLastName, clientDateOfBirth, sqlConnection);
                     result = Result.success.ToString();
-                    clients = Client.SelectClients(sqlConnection);
+                    clients = Client.SelectClients(LogIn.loggedInId, sqlConnection);
                 }
                 catch (Exception ex)
                 {
@@ -137,7 +137,7 @@ namespace webapi.Controllers
                     sqlConnection.Open();
                     rowsAffected = Client.DeleteClient(clientId, sqlConnection);
                     result = Result.success.ToString();
-                    clients = Client.SelectClients(sqlConnection);
+                    clients = Client.SelectClients(LogIn.loggedInId, sqlConnection);
                 }
                 catch (Exception ex)
                 {

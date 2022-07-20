@@ -6,30 +6,41 @@ namespace webapi
 {
     public class LogIn
     {
+
+        public static bool therapistLoggedIn;
         // Used in controller to pass result of log in attempt
         public string result { get; set; }
         public int id { get; set; }
 
+        public static int loggedInId;
+
         // Accounts are added manually in the API
         public static Dictionary<string, string> accountUsernameAndPassword = new Dictionary<string, string>()
         {
-            {"JOtie@testemail.com" , "Arca1234"},
-            {"JTerapie@testemail.com" , "Arca4321"},
-            {"SusanAnderson@mail.com" , "Parent1234"},
-            {"MikeAnthony@mail.com" , "Parent4321"}
+            {"JOtie@arcatherapy.com" , "Arca1234"},
+            {"JTerapie@arcatherapy.com" , "Arca1234"},
+            {"PBrennan@mail.com", "Parent1234"},
+            {"SHenderson@mail.com", "Parent1234"},
+            {"JNoble@mail.com", "Parent1234"},
+            {"YRamsey@mail.com", "Parent1234"},
+            {"BSharp@mail.com", "Parent1234"},
+            {"SSabbath@arcatherapy.com", "Arca1234"}
         };
 
         // The lists below authorize accounts to have roles if they pass log in
         public static Dictionary<string, int> therapistAccountsAndIds = new Dictionary<string, int>()
         {
-            {"JOtie@testemail.com", 1000},
-            {"JTerapie@testemail.com", 1001}
+            {"JOtie@arcatherapy.com", 1001},
+            {"SSabbath@arcatherapy.com", 1002}
         };
 
-        public static List<string> parentAccounts = new List<string>()
+        public static Dictionary<string, int> parentAccountsAndIds = new Dictionary<string, int>()
         {
-            "SusanAnderson@mail.com",
-            "MikeAnthony@mail.com"
+            {"PBrennan@mail.com", 1001},
+            {"SHenderson@mail.com", 1005},
+            {"JNoble@mail.com", 1006},
+            {"YRamsey@mail.com", 1007},
+            {"BSharp@mail.com", 1003}
         };
 
         // Authenticate username and password
@@ -57,10 +68,12 @@ namespace webapi
         {
             if (therapistAccountsAndIds.ContainsKey(username))
             {
+                therapistLoggedIn = true;
                 return "Therapist";
             }
             else
             {
+                therapistLoggedIn = false;
                 return "Parent";
             }
         }
@@ -68,6 +81,11 @@ namespace webapi
         public static int GetTherapistId(string username)
         {
             return therapistAccountsAndIds[username];
+        }
+
+        public static int GetParentId(string username)
+        {
+            return parentAccountsAndIds[username];
         }
 
     }

@@ -37,7 +37,14 @@ namespace webapi.Controllers
                 if (logIn.result == "Therapist")
                 {
                     logIn.id = LogIn.GetTherapistId(username);
+                    LogIn.loggedInId = logIn.id;
                 }
+                else
+                {
+                    logIn.id = LogIn.GetParentId(username);
+                    LogIn.loggedInId = logIn.id;
+                }
+
                 return logIn;
             }
             else

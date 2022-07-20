@@ -102,38 +102,38 @@ namespace webapi.Controllers
             return response;
         }
 
-        // [HttpGet]
-        // [Route("/DeleteMessage")]
-        // public Response DeleteMessage(int messageId)
-        // {
-        //     Response response = new Response();
-        //     List<Message> userMessages = new List<Message>();
-        //     int rowsAffected = 0;
-        //     string result = Result.failure.ToString();
-        //     string message = "";
+        [HttpGet]
+        [Route("/DeleteMessage")]
+        public Response DeleteMessage(int clientId, int messageId)
+        {
+            Response response = new Response();
+            List<Message> userMessages = new List<Message>();
+            int rowsAffected = 0;
+            string result = Result.failure.ToString();
+            string message = "";
 
-        //     using (SqlConnection sqlConnection = new SqlConnection(connectionString))
-        //     {
-        //         try
-        //         {
-        //             sqlConnection.Open();
-        //             rowsAffected = Message.DeleteMessage(messageId, sqlConnection);
-        //             result = Result.success.ToString();
-        //             userMessages = Message.SelectMessages(clientId, sqlConnection);
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             message = ex.Message;
-        //         }
-        //     }
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    rowsAffected = Message.DeleteMessage(messageId, sqlConnection);
+                    result = Result.success.ToString();
+                    userMessages = Message.SelectMessages(clientId, sqlConnection);
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
+            }
 
-        //     response.result = result;
-        //     response.rowsAffected = rowsAffected;
-        //     response.message = message;
-        //     response.userDbMessages = userMessages;
+            response.result = result;
+            response.rowsAffected = rowsAffected;
+            response.message = message;
+            response.userDbMessages = userMessages;
 
-        //     return response;
-        // }
+            return response;
+        }
 
         // [HttpGet]
         // [Route("/UpdateTherapist")]

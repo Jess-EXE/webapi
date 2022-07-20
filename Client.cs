@@ -12,6 +12,11 @@ namespace webapi
         public int PrimaryContactId { get; set; }
         public string PrimaryContactFirstName { get; set; }
         public string PrimaryContactLastName { get; set; }
+        public string TherapistFirstName { get; set; }
+        public string TherapistLastName { get; set; }
+
+        public string TherapistTitle { get; set; }
+
         // public string Address { get; set; }
         // public string City { get; set; }
         public string StateId { get; set; }
@@ -26,18 +31,32 @@ namespace webapi
 
         public int CurrentPrimaryContactId { get; set; }
 
-        public static List<Client> SelectClients(SqlConnection sqlConnection)
+        public static List<Client> SelectClients(int currentLoggedInId, SqlConnection sqlConnection)
         {
             List<Client> clients = new List<Client>();
+            string sql;
+            currentLoggedInId = LogIn.loggedInId;
 
-            string sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId;";
+            if (LogIn.therapistLoggedIn)
+            {
+                sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.TherapistId = @Id;";
+            }
+            else
+            {
+                sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.PrimaryContactId = @Id;";
+            }
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
                 sqlCommand.CommandType = System.Data.CommandType.Text;
 
+                sqlCommand.Parameters.Add("@Id", System.Data.SqlDbType.Int);
+
+                sqlCommand.Parameters["@Id"].Value = currentLoggedInId;
+
                 using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
                 {
+
                     while (sqlDataReader.Read())
                     {
                         Client client = new Client();
@@ -160,7 +179,7 @@ namespace webapi
         {
             Client client = new Client();
 
-            string sql = "SELECT clientid, clientfirstname, clientlastname, clientdateofbirth FROM client WHERE clientid = @ClientId;";
+            string sql = "SELECT c.clientid, c.clientfirstname, c.clientlastname, c.clientdateofbirth, t.FirstName, t.LastName, l.titleName FROM Client c JOIN Therapist t ON c.therapistID = t.therapistId JOIN Title l ON t.titleId = l.titleId WHERE clientid = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -176,6 +195,10 @@ namespace webapi
                         client.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
                         client.ClientFirstName = sqlDataReader["ClientFirstName"].ToString();
                         client.ClientLastName = sqlDataReader["ClientLastName"].ToString();
+                        client.ClientLastName = sqlDataReader["ClientLastName"].ToString();
+                        client.TherapistFirstName = sqlDataReader["FirstName"].ToString();
+                        client.TherapistLastName = sqlDataReader["LastName"].ToString();
+                        client.TherapistTitle = sqlDataReader["TitleName"].ToString();
                         client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["ClientDateOfBirth"]).ToShortDateString();
                     }
                 }

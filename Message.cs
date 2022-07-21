@@ -15,6 +15,8 @@ namespace webapi
 
         public DateTime TimeSent { get; set; }
         public int MessageId { get; set; }
+
+        public string FromTherapist { get; set; }
         //public List<string> recievedMessages = new List<string>();
 
         // public static Message SelectMessages(int clientId, int therapistId, SqlConnection sqlConnection)
@@ -59,7 +61,7 @@ namespace webapi
         {
             List<Message> userMessages = new List<Message>();
 
-            string sql = "SELECT MessageId, MessageText, FromUser, TimeSent FROM [Message] WHERE ClientId = @ClientId;";
+            string sql = "SELECT MessageId, MessageText, FromUser, TimeSent, FromTherapist FROM [Message] WHERE ClientId = @ClientId ORDER BY TimeSent;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -88,6 +90,7 @@ namespace webapi
                         message.MessageText = sqlDataReader["MessageText"].ToString();
                         message.FromUser = sqlDataReader["FromUser"].ToString();
                         message.TimeSent = Convert.ToDateTime(sqlDataReader["TimeSent"]);
+                        message.FromTherapist = sqlDataReader["FromTherapist"].ToString();
 
                         userMessages.Add(message);
                     }
@@ -96,9 +99,17 @@ namespace webapi
             return userMessages;
         }
 
-        public static int InsertMessage(int clientId, int sentFromId, string messageText, SqlConnection sqlConnection)
+        public static int InsertMessage(int clientId, int sentFromId, string messageText, string fromTherapist, SqlConnection sqlConnection)
         {
-            string sql = "INSERT INTO [Message] (ClientId, MessageText, TimeSent, FromUser) VALUES (@ClientId, @MessageText, CURRENT_TIMESTAMP, (SELECT (FirstName + ' ' + LastName) AS FullName FROM Therapist WHERE TherapistId = @SentFromId));";
+            string sql;
+            if (LogIn.therapistLoggedIn)
+            {
+                sql = "INSERT INTO [Message] (ClientId, MessageText, TimeSent, FromUser, FromTherapist) VALUES (@ClientId, @MessageText, CURRENT_TIMESTAMP, (SELECT (FirstName + ' ' + LastName) AS FullName FROM Therapist WHERE TherapistId = @SentFromId), @FromTherapist);";
+            }
+            else
+            {
+                sql = "INSERT INTO [Message] (ClientId, MessageText, TimeSent, FromUser, FromTherapist) VALUES (@ClientId, @MessageText, CURRENT_TIMESTAMP, (SELECT (PrimaryContactFirstName + ' ' + PrimaryContactLastName) AS FullName FROM PrimaryContact WHERE PrimaryContactId = @SentFromId), @FromTherapist);";
+            }
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -111,6 +122,7 @@ namespace webapi
                 sqlCommand.Parameters.Add("@MessageText", System.Data.SqlDbType.Text);
                 //sqlCommand.Parameters.Add("@CurrentTimestamp", System.Data.SqlDbType.DateTime);
                 sqlCommand.Parameters.Add("@SentFromId", System.Data.SqlDbType.Int);
+                sqlCommand.Parameters.Add("@FromTherapist", System.Data.SqlDbType.Text);
 
                 sqlCommand.Parameters["@ClientId"].Value = clientId;
                 //sqlCommand.Parameters.Add["@TimeSent"].Value = timeSent;
@@ -119,6 +131,7 @@ namespace webapi
                 //sqlCommand.Parameters["@CurrentTimestamp"].Value = CurrentTimestamp;
                 sqlCommand.Parameters["@MessageText"].Value = messageText;
                 sqlCommand.Parameters["@SentFromId"].Value = sentFromId;
+                sqlCommand.Parameters["@FromTherapist"].Value = fromTherapist;
 
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 return rowsAffected;

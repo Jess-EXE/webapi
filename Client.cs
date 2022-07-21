@@ -17,10 +17,12 @@ namespace webapi
 
         public string TherapistTitle { get; set; }
 
-        // public string Address { get; set; }
-        // public string City { get; set; }
+        public string TherapistOfficePhone { get; set; }
+
+        public string Address { get; set; }
+        public string City { get; set; }
+        public int Zipcode { get; set; }
         public string StateId { get; set; }
-        // public int Zipcode { get; set; }
         public string Phone { get; set; }
         public string EmailAddress { get; set; }
         // public string PrimaryContactPassword { get; set; }
@@ -31,19 +33,24 @@ namespace webapi
 
         public int CurrentPrimaryContactId { get; set; }
 
+        public int TherapistCaseload { get; set; }
+
         public static List<Client> SelectClients(int currentLoggedInId, SqlConnection sqlConnection)
         {
             List<Client> clients = new List<Client>();
             string sql;
             currentLoggedInId = LogIn.loggedInId;
+            //int caseload;
 
             if (LogIn.therapistLoggedIn)
             {
-                sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.TherapistId = @Id;";
+                //caseload = GetCaseload(currentLoggedInId, sqlConnection);
+                sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress, p.Address, p.City, p.Zipcode, p.StateId FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.TherapistId = @Id;";
             }
             else
             {
-                sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.PrimaryContactId = @Id;";
+                //caseload = 0;
+                sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress, p.Address, p.City, p.Zipcode, p.StateId FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.PrimaryContactId = @Id;";
             }
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
@@ -61,6 +68,7 @@ namespace webapi
                     {
                         Client client = new Client();
 
+                        //client.TherapistCaseload = caseload;
                         client.PrimaryContactId = Convert.ToInt32(sqlDataReader["PrimaryContactId"]);
                         client.PrimaryContactFirstName = sqlDataReader["PrimaryContactFirstName"].ToString();
                         client.PrimaryContactLastName = sqlDataReader["PrimaryContactLastName"].ToString();
@@ -70,6 +78,10 @@ namespace webapi
                         client.ClientFirstName = sqlDataReader["ClientFirstName"].ToString();
                         client.ClientLastName = sqlDataReader["ClientLastName"].ToString();
                         client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["ClientDateOfBirth"]).ToShortDateString();
+                        client.Address = sqlDataReader["Address"].ToString();
+                        client.Zipcode = Convert.ToInt32(sqlDataReader["Zipcode"]); ;
+                        client.StateId = sqlDataReader["StateId"].ToString();
+                        client.City = sqlDataReader["City"].ToString();
                         clients.Add(client);
                     }
                 }
@@ -160,7 +172,7 @@ namespace webapi
 
         public static int DeleteClient(int clientId, SqlConnection sqlConnection)
         {
-            string sql = "DELETE FROM Client WHERE ClientId = @ClientId;";
+            string sql = "DELETE FROM [Message] WHERE ClientId = @ClientId; DELETE FROM Client WHERE ClientId = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -179,7 +191,7 @@ namespace webapi
         {
             Client client = new Client();
 
-            string sql = "SELECT c.clientid, c.clientfirstname, c.clientlastname, c.clientdateofbirth, t.FirstName, t.LastName, l.titleName FROM Client c JOIN Therapist t ON c.therapistID = t.therapistId JOIN Title l ON t.titleId = l.titleId WHERE clientid = @ClientId;";
+            string sql = "SELECT c.clientid, c.clientfirstname, c.clientlastname, c.clientdateofbirth, t.FirstName, t.LastName, l.titleName, o.phone FROM Client c JOIN Therapist t ON c.therapistID = t.therapistId JOIN Title l ON t.titleId = l.titleId JOIN Office o ON t.officeId = o.officeId  WHERE clientid = @ClientId;";
 
             using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
             {
@@ -199,6 +211,7 @@ namespace webapi
                         client.TherapistFirstName = sqlDataReader["FirstName"].ToString();
                         client.TherapistLastName = sqlDataReader["LastName"].ToString();
                         client.TherapistTitle = sqlDataReader["TitleName"].ToString();
+                        client.TherapistOfficePhone = sqlDataReader["Phone"].ToString();
                         client.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["ClientDateOfBirth"]).ToShortDateString();
                     }
                 }
@@ -227,6 +240,26 @@ namespace webapi
                 }
             }
             return client;
+        }
+
+        public static int GetCaseload(int therapistId, SqlConnection sqlConnection)
+        {
+            int caseload;
+
+            string sql = "SELECT COUNT(ClientId) FROM Client WHERE TherapistId = @TherapistId;";
+
+            using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+            {
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+
+                sqlCommand.Parameters.Add("@TherapistId", System.Data.SqlDbType.Int);
+
+                sqlCommand.Parameters["@TherapistId"].Value = therapistId;
+
+                caseload = sqlCommand.ExecuteNonQuery();
+
+                return caseload;
+            }
         }
 
     }

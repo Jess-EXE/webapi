@@ -182,5 +182,21 @@ namespace webapi.Controllers
 
             return client;
         }
+
+        //test
+
+        // [HttpGet]
+        // [Route("/SelectClientId")]
+        // public Client SelectClientId(int currentLoggedInId)
+        // {
+        //     Client client = new Client();
+        //     using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+        //     {
+        //         sqlConnection.Open();
+        //         client = Client.SelectClientId(currentLoggedInId, sqlConnection);
+        //     }
+
+        //     return client;
+        // }
     }
 }

@@ -262,5 +262,57 @@ namespace webapi
             }
         }
 
+        //test
+        // public static Client SelectClientId(int currentLoggedInId, SqlConnection sqlConnection)
+        // {
+        //     Client currentClient = new Client();
+
+        //     currentLoggedInId = 1003;
+        //     //int caseload;
+
+
+
+
+
+        //     string sql = "SELECT c.ClientId, c.ClientFirstName, c.ClientLastName, c.ClientDateOfBirth, p.PrimaryContactId, p.PrimaryContactFirstName, p.PrimaryContactLastName, p.Phone, p.EmailAddress, p.Address, p.City, p.Zipcode, p.StateId FROM Client c JOIN PrimaryContact p ON c.PrimaryContactId = p.PrimaryContactId WHERE c.PrimaryContactId = @Id;";
+
+
+        //     using (SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection))
+        //     {
+        //         sqlCommand.CommandType = System.Data.CommandType.Text;
+
+        //         sqlCommand.Parameters.Add("@Id", System.Data.SqlDbType.Int);
+
+        //         sqlCommand.Parameters["@Id"].Value = currentLoggedInId;
+
+        //         using (SqlDataReader sqlDataReader = sqlCommand.ExecuteReader())
+        //         {
+
+        //             while (sqlDataReader.Read())
+        //             {
+        //                 //Client currentClient = new Client();
+
+        //                 //client.TherapistCaseload = caseload;
+        //                 currentClient.PrimaryContactId = Convert.ToInt32(sqlDataReader["PrimaryContactId"]);
+        //                 currentClient.PrimaryContactFirstName = sqlDataReader["PrimaryContactFirstName"].ToString();
+        //                 currentClient.PrimaryContactLastName = sqlDataReader["PrimaryContactLastName"].ToString();
+        //                 currentClient.Phone = sqlDataReader["Phone"].ToString();
+        //                 currentClient.EmailAddress = sqlDataReader["EmailAddress"].ToString();
+        //                 currentClient.ClientId = Convert.ToInt32(sqlDataReader["ClientId"]);
+        //                 currentClient.ClientFirstName = sqlDataReader["ClientFirstName"].ToString();
+        //                 currentClient.ClientLastName = sqlDataReader["ClientLastName"].ToString();
+        //                 currentClient.ClientDateOfBirth = Convert.ToDateTime(sqlDataReader["ClientDateOfBirth"]).ToShortDateString();
+        //                 currentClient.Address = sqlDataReader["Address"].ToString();
+        //                 currentClient.Zipcode = Convert.ToInt32(sqlDataReader["Zipcode"]); ;
+        //                 currentClient.StateId = sqlDataReader["StateId"].ToString();
+        //                 currentClient.City = sqlDataReader["City"].ToString();
+
+        //                 //client = currentClient;
+        //             }
+        //         }
+        //     }
+        //     return currentClient;
+        // }
+
     }
 }

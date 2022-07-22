@@ -36,6 +36,14 @@ namespace webapi.Controllers
                 logIn.result = LogIn.Authorize(username);
                 if (logIn.result == "Therapist")
                 {
+                    if (username == "JOtie@arcatherapy.com")
+                    {
+                        logIn.name = "John Otie";
+                    }
+                    else
+                    {
+                        logIn.name = "Sloan Sabbath";
+                    }
                     logIn.id = LogIn.GetTherapistId(username);
                     LogIn.loggedInId = logIn.id;
                 }

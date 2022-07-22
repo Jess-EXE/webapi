@@ -12,6 +12,8 @@ namespace webapi
         public string result { get; set; }
         public int id { get; set; }
 
+        public string name { get; set; }
+
         public static int loggedInId;
 
         // Accounts are added manually in the API

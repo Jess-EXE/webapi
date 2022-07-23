@@ -266,7 +266,7 @@ INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [P
 GO
 INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (3, N'Walter', N'White', N'916 Pittman road', N'Hot Springs', N'IA', 71913, N'5555555555', N'JesseChase@mail.com')
 GO
-INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (1001, N'Patrick', N'Brennan', N'100 Sunnyshore Lane', N'Little Rock', N'AR', 72002, N'501-555-0137', N'PBrennan@testemail.com')
+INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (1001, N'Patrick', N'Brennan', N'100 Sunnyshore Lane', N'Little Rock', N'AR', 72002, N'501-555-0137', N'PBrennan@mailcom')
 GO
 INSERT [dbo].[PrimaryContact] ([PrimaryContactId], [PrimaryContactFirstName], [PrimaryContactLastName], [Address], [City], [StateId], [ZipCode], [Phone], [EmailAddress]) VALUES (1002, N'Dave', N'Hardin', N'200 Fox Hatch Drive', N'Little Rock', N'AR', 72207, N'501-555-0180', N'DHardin@testemail.com')
 GO

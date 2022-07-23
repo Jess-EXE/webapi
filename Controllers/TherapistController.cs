@@ -20,7 +20,7 @@
 //             _logger = logger;
 //         }
 
-//         static string serverName = @"DESKTOP-E3CTJCH\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
+//         static string serverName = @"GWART-PC\SQLEXPRESS"; //Change to the "Server Name" you see when you launch SQL Server Management Studio.
 //         static string databaseName = "OTeam"; //Change to the database where you created your Employee table.
 //         string connectionString = $"data source={serverName}; database={databaseName}; Integrated Security=true;";
 

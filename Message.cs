@@ -102,7 +102,7 @@ namespace webapi
         public static int InsertMessage(int clientId, int sentFromId, string messageText, string fromTherapist, SqlConnection sqlConnection)
         {
             string sql;
-            if (fromTherapist == "TRUE")
+            if (LogIn.therapistLoggedIn)
             {
                 sql = "INSERT INTO [Message] (ClientId, MessageText, TimeSent, FromUser, FromTherapist) VALUES (@ClientId, @MessageText, CURRENT_TIMESTAMP, (SELECT (FirstName + ' ' + LastName) AS FullName FROM Therapist WHERE TherapistId = @SentFromId), @FromTherapist);";
             }
